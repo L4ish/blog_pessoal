@@ -1,17 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Postagem } from '../entities/postagem.entity';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
+import { DeleteResult } from 'typeorm/browser';
 
-@Injectable()
+@Injectable() //service sempre começa com injectable. Permite ser usado por outras classes.
 export class PostagemService {
   constructor(
-    @InjectRepository(Postagem)
-    private postagemRepository: Repository<Postagem>,
+    @InjectRepository(Postagem) //Injectrepository é da ORM e serve para fazer interaçõe com o banco de dados.Postagem é minha entity.
+    private postagemRepository: Repository<Postagem>, //variável do tipo repository que recebe minha entidade Postagem.
   ) {}
 
   //Método findAll = listar todas as postagens persistidas no banco de dados.
+  //meu pedido async é uma promise(promessa) de que vai chegar as prostagens, caso não chegue é emitido erro 404.
   async findAll(): Promise<Postagem[]> {
-    return await this.postagemRepository.find();
+    return await this.postagemRepository.find(); //await aguardar a resposta.
+  }
+
+  //Método findById = listar postagem por ID.
+  async findById(id: number): Promise<Postagem> {
+    const postagem = await this.postagemRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!postagem)
+      throw new HttpException('Postagem não encontrada!', HttpStatus.NOT_FOUND);
+
+    return postagem;
+  }
+
+  //Listar postagem por título
+  async findAllByTitulo(titulo: string): Promise<Postagem[]> {
+    return await this.postagemRepository.find({
+      where: {
+        titulo: ILike(`%${titulo}%`),
+      },
+    });
+  }
+
+  //Método criar - cadastrar
+  async create(postagem: Postagem): Promise<Postagem> {
+    return await this.postagemRepository.save(postagem);
+  }
+
+  //Método atualizar
+  async update(postagem: Postagem): Promise<Postagem> {
+    await this.findById(postagem.id);
+    return await this.postagemRepository.save(postagem);
+  }
+
+  //Método deletar
+  async delete(id: number): Promise<DeleteResult> {
+    await this.findById(id);
+    return await this.postagemRepository.delete(id);
   }
 }
