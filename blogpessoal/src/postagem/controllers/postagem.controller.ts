@@ -17,6 +17,7 @@ import { Postagem } from '../entities/postagem.entity';
 export class PostagemController {
   constructor(private readonly postagemService: PostagemService) {} //a controller precisa da minha postagem service. Readonly, apenas de leitua. Usa as coisas da service.
 
+  //normalmente o get() e get('/:id') vem antes dos gests com os outros filtros, isso é apenas por questão de organização do código.
   @Get()
   @HttpCode(HttpStatus.OK)
   //utiliza promise porque depende da promessa da postagem.
@@ -29,7 +30,7 @@ export class PostagemController {
   findById(@Param('id', ParseIntPipe) id: number): Promise<Postagem> {
     return this.postagemService.findById(id);
   }
-
+  //os gets precisam ser diferentes um do outro.
   @Get('/titulo/:titulo')
   @HttpCode(HttpStatus.OK)
   findByTitulo(@Param('titulo') titulo: string): Promise<Postagem[]> {

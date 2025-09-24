@@ -20,6 +20,7 @@ export class PostagemService {
   //Método findById = listar postagem por ID.
   async findById(id: number): Promise<Postagem> {
     const postagem = await this.postagemRepository.findOne({
+      //typeorm
       where: {
         id,
       },
@@ -34,6 +35,7 @@ export class PostagemService {
   //Listar postagem por título
   async findAllByTitulo(titulo: string): Promise<Postagem[]> {
     return await this.postagemRepository.find({
+      // TYPEORM vai no banco de dados e pesquisa para mim através da cláusula WHERE.
       where: {
         titulo: ILike(`%${titulo}%`),
       },
@@ -42,18 +44,19 @@ export class PostagemService {
 
   //Método criar - cadastrar
   async create(postagem: Postagem): Promise<Postagem> {
+    // o create recebe a postagem e salva ela no banco. Não precisa do ID.
     return await this.postagemRepository.save(postagem);
   }
 
   //Método atualizar
   async update(postagem: Postagem): Promise<Postagem> {
-    await this.findById(postagem.id);
-    return await this.postagemRepository.save(postagem);
+    await this.findById(postagem.id); //pesquisa a postagem por ID. O findById faz a verificação de se a postagem existe ou não. Caso não exista apresneta o erro 404.
+    return await this.postagemRepository.save(postagem); //recebe a postagem já com o ID e salva por cima de um que já existia.
   }
 
   //Método deletar
   async delete(id: number): Promise<DeleteResult> {
-    await this.findById(id);
+    await this.findById(id); //verifica se a postagem exite através do id. Caso existe, ele vai no banco de dados e apaga a postagem através do id.
     return await this.postagemRepository.delete(id);
   }
 }
