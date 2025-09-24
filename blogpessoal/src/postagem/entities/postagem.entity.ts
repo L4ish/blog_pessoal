@@ -24,7 +24,7 @@ export class Postagem {
   @UpdateDateColumn()
   data: Date;
 
-  //criando relacionamento com a entidade tema
+  //criando relacionamento com a entidade Tema
   @ManyToOne(() => Tema, (tema) => tema.postagem, {
     onDelete: 'CASCADE',
   })

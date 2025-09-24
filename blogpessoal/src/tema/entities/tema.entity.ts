@@ -11,7 +11,7 @@ export class Tema {
   @Column({ length: 22, nullable: false })
   descricao: string;
 
-  //criando relacionamento com a entidade postagem
+  //criando relacionamento com a entidade Postagem
   @OneToMany(() => Postagem, (postagem) => postagem.tema)
   postagem: Postagem[];
 }
