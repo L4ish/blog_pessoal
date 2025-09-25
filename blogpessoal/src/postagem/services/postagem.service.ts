@@ -1,3 +1,4 @@
+import { TemaService } from './../../tema/services/tema.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Postagem } from '../entities/postagem.entity';
@@ -9,20 +10,28 @@ export class PostagemService {
   constructor(
     @InjectRepository(Postagem) //Injectrepository é da ORM e serve para fazer interaçõe com o banco de dados.Postagem é minha entity.
     private postagemRepository: Repository<Postagem>, //variável do tipo repository que recebe minha entidade Postagem.
+    private temaService: TemaService, //injeção de dependências para ter acesso aos métodos da class tema service
   ) {}
 
   //Método findAll = listar todas as postagens persistidas no banco de dados.
   //meu pedido async é uma promise(promessa) de que vai chegar as prostagens, caso não chegue é emitido erro 404.
   async findAll(): Promise<Postagem[]> {
-    return await this.postagemRepository.find(); //await aguardar a resposta.
+    return await this.postagemRepository.find({
+      //await aguardar a resposta.
+      relations: {
+        tema: true,
+      },
+    });
   }
 
   //Método findById = listar postagem por ID.
   async findById(id: number): Promise<Postagem> {
     const postagem = await this.postagemRepository.findOne({
-      //typeorm
       where: {
         id,
+      },
+      relations: {
+        tema: true,
       },
     });
 
@@ -39,11 +48,15 @@ export class PostagemService {
       where: {
         titulo: ILike(`%${titulo}%`),
       },
+      relations: {
+        tema: true,
+      },
     });
   }
 
   //Método criar - cadastrar
   async create(postagem: Postagem): Promise<Postagem> {
+    await this.temaService.findById(postagem.tema.id);
     // o create recebe a postagem e salva ela no banco. Não precisa do ID.
     return await this.postagemRepository.save(postagem);
   }
@@ -51,6 +64,7 @@ export class PostagemService {
   //Método atualizar
   async update(postagem: Postagem): Promise<Postagem> {
     await this.findById(postagem.id); //pesquisa a postagem por ID. O findById faz a verificação de se a postagem existe ou não. Caso não exista apresneta o erro 404.
+    await this.temaService.findById(postagem.tema.id);
     return await this.postagemRepository.save(postagem); //recebe a postagem já com o ID e salva por cima de um que já existia.
   }
 

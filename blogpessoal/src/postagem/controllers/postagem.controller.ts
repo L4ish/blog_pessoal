@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { Postagem } from '../entities/postagem.entity';
 
-@Controller('/postagens') //sempre terá o @controller e o seu caminho que nessa caso é /postagens/.
+@Controller('/postagens') //sempre terá o @controller e o seu caminho que nesse caso é /postagens/.
 export class PostagemController {
   constructor(private readonly postagemService: PostagemService) {} //a controller precisa da minha postagem service. Readonly, apenas de leitua. Usa as coisas da service.
 

@@ -8,7 +8,7 @@ export class Tema {
   id: number;
 
   @IsNotEmpty()
-  @Column({ length: 22, nullable: false })
+  @Column({ length: 225, nullable: false })
   descricao: string;
 
   //criando relacionamento com a entidade Postagem
