@@ -10,9 +10,12 @@ import {
   Post,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { Postagem } from '../entities/postagem.entity';
+import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('/postagens') //sempre terá o @controller e o seu caminho que nesse caso é /postagens/.
 export class PostagemController {
   constructor(private readonly postagemService: PostagemService) {} //a controller precisa da minha postagem service. Readonly, apenas de leitua. Usa as coisas da service.
@@ -30,7 +33,7 @@ export class PostagemController {
   findById(@Param('id', ParseIntPipe) id: number): Promise<Postagem> {
     return this.postagemService.findById(id);
   }
-  //os gets precisam ser diferentes um do outro.
+  //os gets precisam ser diferentes um do outro.s
   @Get('/titulo/:titulo')
   @HttpCode(HttpStatus.OK)
   findByTitulo(@Param('titulo') titulo: string): Promise<Postagem[]> {
