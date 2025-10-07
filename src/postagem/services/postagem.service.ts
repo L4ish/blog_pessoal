@@ -5,7 +5,7 @@ import { Postagem } from '../entities/postagem.entity';
 import { Repository, ILike } from 'typeorm';
 import { DeleteResult } from 'typeorm/browser';
 
-@Injectable() //service sempre começa com injectable. Permite ser usado por outras classes.
+@Injectable() //service sempre começa com injectable. Injectablo sigifica que o nest administra essa classe.
 export class PostagemService {
   constructor(
     @InjectRepository(Postagem) //Injectrepository é da ORM e serve para fazer interações com o banco de dados.Postagem é minha entity.
