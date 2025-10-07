@@ -8,29 +8,36 @@ import {
 } from 'typeorm';
 import { Tema } from '../../tema/entities/tema.entity';
 import { Usuario } from '../../usuario/entities/usuario.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'tb_postagens' }) //nome da tabela no banco de dados
 export class Postagem {
   @PrimaryGeneratedColumn()
+  @ApiProperty()
   id: number;
 
   @IsNotEmpty() //valor do atributo não pode ser vazio.
   @Column({ length: 100, nullable: false }) //valor do atributo não pode ser nulo.
+  @ApiProperty()
   titulo: string;
 
   @IsNotEmpty()
   @Column({ length: 1000, nullable: false })
+  @ApiProperty()
   texto: string;
 
   @UpdateDateColumn()
+  @ApiProperty()
   data: Date;
 
   //criando relacionamento com a entidade Tema
+  @ApiProperty({ type: () => Tema })
   @ManyToOne(() => Tema, (tema) => tema.postagem, {
     onDelete: 'CASCADE',
   })
   tema: Tema;
 
+  @ApiProperty({ type: () => Usuario })
   @ManyToOne(() => Usuario, (usuario) => usuario.postagem, {
     onDelete: 'CASCADE',
   })
