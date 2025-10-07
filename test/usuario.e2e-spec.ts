@@ -12,7 +12,7 @@ describe('Testes dos módulos Usuário e Auth (e2e)', () => {
   let usuarioId: any;
   let token: any;
 
-  //Será executado uma única vez antes de iniciar os testes. Tem a responsabilidade de criar o módulo de testesda aplicação
+  //Será executado uma única vez antes de iniciar os testes. Tem a responsabilidade de criar o módulo de testes da aplicação
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       //Configuração do banco de dados na classe de testes
